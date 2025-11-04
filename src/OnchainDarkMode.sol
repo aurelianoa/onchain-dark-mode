@@ -74,21 +74,19 @@ contract OnchainDarkMode {
     /// @notice Toggles the theme preference for the calling user
     /// @dev If user has no preference set, defaults to Dark mode
     function toggleTheme() external {
-        Theme currentTheme = userThemes[msg.sender];
+        bool hadPreviousTheme = hasSetTheme[msg.sender];
+        Theme previousTheme = userThemes[msg.sender];
         Theme newTheme;
 
-        if (!hasSetTheme[msg.sender]) {
+        if (!hadPreviousTheme) {
             // If user hasn't set theme, default to dark mode
             newTheme = Theme.Dark;
         } else {
             // Toggle between light and dark
-            newTheme = currentTheme == Theme.Light ? Theme.Dark : Theme.Light;
+            newTheme = previousTheme == Theme.Light ? Theme.Dark : Theme.Light;
         }
 
         // Update the user's theme preference
-        Theme previousTheme = userThemes[msg.sender];
-        bool hadPreviousTheme = hasSetTheme[msg.sender];
-
         userThemes[msg.sender] = newTheme;
 
         if (!hadPreviousTheme) {
